@@ -203,6 +203,18 @@ vector<string> generateParenthesis(int n) {
     return res;
 }
 
+// 121 Buy and Sell
+int maxProfit(vector<int> &prices) {
+        int maxPro = 0;
+        int minPrice = INT_MAX;
+        for(int i = 0; i < prices.size(); i++){
+            minPrice = min(minPrice, prices[i]);
+            maxPro = max(maxPro, prices[i] - minPrice);
+        }
+        return maxPro;
+}
+
+
 // 125. Palindrome
 bool isPalindrome(string s) {
     string temp = "";
@@ -281,6 +293,15 @@ void rotate(vector<int>& nums, int k) {
     }
 }
 
+// 206
+ListNode* reverseList(ListNode* head) {
+    if (head == NULL) return NULL;
+    ListNode *temp = reverseList(head->next);
+    head->next->next = head;
+    head->next = NULL;
+    return temp;
+}
+
 int checkCommon(vector<int>& n, vector<int>& m){
     bool checker = false;
     int curNode = 0;
@@ -335,6 +356,6 @@ int main(int argc, const char * argv[]) {
     vector<int> m = {7,24,3,8,5,11};
     vector<int> A = {1,0,-1,0,2,-2};
     vector<vector <int>> r = fourSum(A,0);
-    cout << getSum(17,29) << endl;
+    cout << maxProfit(n) << endl;
     return 0;
 }
