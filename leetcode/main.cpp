@@ -72,7 +72,7 @@ TreeNode* invertTree(TreeNode* root) {
     return root;
 }
 
-// 8. String to Integer (atoi)
+// MARK: 8. String to Integer (atoi)
 int myAtoi(string str) {
     if (!str.length()) return 0;
     int i = 0, sign = 1;
@@ -87,7 +87,7 @@ int myAtoi(string str) {
     return res * sign;
 }
 
-// 11. Contains most water
+// MARK: 11. Contains most water
 int maxArea(vector<int>& height) {
     int curMax = 0;
     int length = height.size() - 1;
@@ -106,7 +106,7 @@ int maxArea(vector<int>& height) {
     return curMax;
 }
 
-// 15. 3Sum
+// MARK: 15. 3Sum
 vector<vector<int> > threeSum(vector<int> &num) {
     
     vector<vector<int> > res;
@@ -155,7 +155,7 @@ vector<vector<int> > threeSum(vector<int> &num) {
     
 }
 
-// 18. 4Sum
+// MARK: 18. 4Sum
 vector<vector<int>> fourSum(vector<int>& nums, int target) {
     vector<vector<int>> result;
     std::sort(nums.begin(), nums.end());
@@ -182,8 +182,43 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
     
 }
 
+// MARK: 21. Merge 2 sorted lists
+ListNode* mergeTwoLists1(ListNode* l1, ListNode* l2) {
+    if (l1 == NULL) return l2;
+    if (l2 == NULL) return l1;
+    if (l1->val <= l2->val) {
+        l1->next = mergeTwoLists1(l1->next, l2);
+        return l1;
+    } else {
+        l2->next = mergeTwoLists1(l1, l2->next);
+        return l2;
+    }
+}
 
-// 22. Generate Parenthesis
+ListNode* mergeTwoLists2(ListNode* l1, ListNode* l2) {
+    if (!l1) return l2;
+    if (!l2) return l1;
+    ListNode* res = new ListNode(0);
+    ListNode* cur = res;
+    while (l1 && l2) {
+        if (l1->val < l2->val){
+            cur->next = l1;
+            l1 = l1->next;
+        } else {
+            cur->next = l2;
+            l2 = l2->next;
+        }
+        cur = cur->next;
+    }
+    if (l1) {
+        cur->next = l1;
+    } else {
+        cur->next = l2;
+    }
+    return res->next;
+}
+
+// MARK: 22. Generate Parenthesis
 void helper(vector<string> &cur, string curString, int left, int right){
     if (right == 0){
         cur.push_back(curString);
@@ -203,7 +238,18 @@ vector<string> generateParenthesis(int n) {
     return res;
 }
 
-// 121 Buy and Sell
+// MARK: 24 Swap nodes in pairs
+ListNode* swapPairs(ListNode* head) {
+    if (head == NULL || head->next == NULL) return head;
+    ListNode *temp1 = swapPairs(head->next->next);
+    ListNode *temp2 = head;
+    head = head->next;
+    head->next = temp2;
+    temp2->next = temp1;
+    return head;
+}
+
+// MARK: 121 Buy and Sell
 int maxProfit(vector<int> &prices) {
         int maxPro = 0;
         int minPrice = INT_MAX;
@@ -215,7 +261,7 @@ int maxProfit(vector<int> &prices) {
 }
 
 
-// 125. Palindrome
+// MARK: 125. Palindrome
 bool isPalindrome(string s) {
     string temp = "";
     for(int i = 0; i < s.length(); i++){
@@ -232,7 +278,7 @@ bool isPalindrome(string s) {
     return true;
 }
 
-// 141. Linked list cycle
+// MARK: 141. Linked list cycle
 bool hasCycle(ListNode *head) {
     if (head == NULL || head->next == NULL) return false;
     ListNode *fast = head;
@@ -246,7 +292,7 @@ bool hasCycle(ListNode *head) {
     return false;
 }
 
-// 165. Compare Version Numbers
+// MARK: 165. Compare Version Numbers
 int compareVersion(string version1, string version2) {
     char dot;
     istringstream ss1(version1), ss2(version2);
@@ -261,7 +307,7 @@ int compareVersion(string version1, string version2) {
     return 0;
 }
 
-// 168. Excel sheet column title
+// MARK: 168. Excel sheet column title
 // 27 -> AA
 // 28 -> AB
 string convertToTitle(int n) {
@@ -274,7 +320,7 @@ string convertToTitle(int n) {
     return result;
 }
 
-// 171
+// MARK: 171 Excel column to number
 int titleToNumber(string s) {
     int res = 0;
     for (int i = 0; i < s.length(); i++) {
@@ -283,7 +329,7 @@ int titleToNumber(string s) {
     return res;
 }
 
-// 189. Rotate Array
+// MARK: 189. Rotate Array
 void rotate(vector<int>& nums, int k) {
     if(k%nums.size())
     {
@@ -293,7 +339,20 @@ void rotate(vector<int>& nums, int k) {
     }
 }
 
-// 206
+
+// MARK: 198 House Robber
+int rob(vector<int>& nums) {
+    if (!nums.size()) return 0;
+    vector<int> res(nums.size(), 0);
+    res[0] = nums[0];
+    res[1] = nums[0] > nums[1]? nums[0]: nums[1];
+    for(int i = 2; i < nums.size(); i++){
+        res[i] = max(res[i-1], res[i-2]+nums[i]);
+    }
+    return res[nums.size()-1];
+}
+
+// MARK: 206 reverse linked list
 ListNode* reverseList(ListNode* head) {
     if (head == NULL) return NULL;
     ListNode *temp = reverseList(head->next);
@@ -322,8 +381,46 @@ int checkCommon(vector<int>& n, vector<int>& m){
     return curNode;
 }
 
+// MARK: 342 is power of 4
+bool isPowerOfFour(int num) {
+    return num > 0 && (num & (num - 1)) == 0 && (num - 1) % 3 == 0;
+    // num & num - 1 : 100000 compare to 0111111 (could be power of 2s)
+    // (num - 1) % 3 prove by induction
+}
 
-// 371 Sum of Two Ints
+// MARK: 345
+
+bool isVowel(char c){
+   return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+           c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U');
+}
+string reverseVowels(string s) {
+    int front = 0, behind = s.length() - 1;
+    while (front < behind)
+    {
+        if (!isVowel(s[front]))
+        {
+            front++;
+        }
+        else if (!isVowel(s[behind]))
+        {
+            behind--;
+        }
+        else
+        {
+            char c = s[front];
+            s[front] = s[behind];
+            s[behind] = c;
+            front++;
+            behind--;
+        }
+    }
+    
+    return s;
+}
+
+
+// MARK: 371 Sum of Two Ints
 int getSum(int a, int b) {
     int sum = 0;
     while (b != 0) {
@@ -334,7 +431,7 @@ int getSum(int a, int b) {
     return a;
 }
 
-// 383.
+// MARK: 383. ransom note
 bool canConstruct(string ransomNote, string magazine) {
     unordered_map<char, int> map;
     for(auto c : magazine){
