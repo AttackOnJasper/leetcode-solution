@@ -6,27 +6,10 @@
 //  Copyright © 2016年 Jasper. All rights reserved.
 //
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <sstream>
-#include <unordered_map>
+#include "header.hpp"
 
 using namespace::std;
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
-
-
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-};
 
 
 string reverseString(string s){
@@ -249,6 +232,65 @@ ListNode* swapPairs(ListNode* head) {
     return head;
 }
 
+
+// MARK: 102 Binary Tree Level Order Traversal
+void levelOrderHelper(TreeNode* root, vector<vector<int>> &list, int level){
+    if (!root) return;
+    if (list.empty() || level > (list.size() - 1)) list.push_back(vector<int>());
+    list[level].push_back(root->val);
+    levelOrderHelper(root->left, list, level+1);
+    levelOrderHelper(root->right, list, level+1);
+}
+vector<vector<int>> levelOrder(TreeNode* root) {
+    vector<vector<int>> list;
+    levelOrderHelper(root, list, 0);
+    return list;
+}
+
+// MARK: 107
+void levelOrderBottomHelper(TreeNode* root, vector<vector<int> > &v, int h){
+    if (root == NULL) return;
+    if (v.empty() || h > (v.size() - 1)) {
+        v.push_back(vector<int>());
+    }
+    v[h].push_back(root->val);
+    levelOrderBottomHelper(root->left, v, h+1);
+    levelOrderBottomHelper(root->right, v, h+1);
+}
+
+vector<vector<int>> levelOrderBottom(TreeNode* root) {
+    vector<vector<int>> res;
+    levelOrderBottomHelper(root, res, 0);
+    reverse(res.begin(), res.end());
+    return res;
+}
+
+// MARK: 110. Balanced Binary Tree
+int height(TreeNode* root){
+    if (!root) return 0;
+    int left = height(root->left);
+    int right = height(root->right);
+    if (left==-1 || right==-1 || left>right+1 || right>left+1) return -1;
+    return max(left,right)+1;
+}
+bool isBalanced(TreeNode* root) {
+    return height(root) != -1;
+}
+
+// MARK: 111. Minimum Depth of Binary Tree
+int minDepth(TreeNode* root) {
+    if (!root) return 0;
+    int left = minDepth(root->left);
+    int right = minDepth(root->right);
+    return (left == 0 || right == 0)? max(left,right)+1 : min(left, right)+1;
+}
+
+// MARK: 112
+bool hasPathSum(TreeNode* root, int sum) {
+    if (!root || (!root->left && !root->right)) return root && root->val == sum;
+    return hasPathSum(root->left, sum-root->val) || hasPathSum(root->right, sum-root->val);
+}
+
 // MARK: 121 Buy and Sell
 int maxProfit(vector<int> &prices) {
         int maxPro = 0;
@@ -361,24 +403,49 @@ ListNode* reverseList(ListNode* head) {
     return temp;
 }
 
-int checkCommon(vector<int>& n, vector<int>& m){
-    bool checker = false;
-    int curNode = 0;
-    int i = (int)(n.size() - m.size());
-    int j = 0;
-    while (i != n.size() || j != m.size()) {
-        if (n[i] == m[j]){
-            if (!checker) {
-                curNode = n[i];
-                checker = true;
-            }
-        } else {
-            checker = false;
-        }
-        i++;
-        j++;                                                                                          
+// MARK: 232 Implement Queue by Stack
+stack<int> s;
+
+// Push element x to the back of queue.
+void push(int x) {
+    stack<int> temp;
+    while (!s.empty()){
+        temp.push(s.top());
+        s.pop();
     }
-    return curNode;
+    s.push(x);
+    while (!temp.empty()){
+        s.push(temp.top());
+        temp.pop();
+    }
+}
+
+// Removes the element from in front of queue.
+void pop(void) {
+    s.pop();
+}
+
+// Get the front element.
+int peek(void) {
+    return s.top();
+}
+
+// Return whether the queue is empty.
+bool empty(void) {
+    return s.empty();
+}
+
+// MARK: 257. Binary Tree Paths
+void binaryTreePathsHelper(TreeNode* root, string curString, vector<string> &v){
+    if (!root) return;
+    if (!root->left && !root->right) v.push_back(curString+to_string(root->val));
+    binaryTreePathsHelper(root->left, curString+to_string(root->val)+"->", v);
+    binaryTreePathsHelper(root->right, curString+to_string(root->val)+"->", v);
+}
+vector<string> binaryTreePaths(TreeNode* root) {
+    vector<string> res;
+    binaryTreePathsHelper(root, "", res);
+    return res;
 }
 
 // MARK: 342 is power of 4
