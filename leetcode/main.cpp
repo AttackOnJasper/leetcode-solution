@@ -232,6 +232,49 @@ ListNode* swapPairs(ListNode* head) {
     return head;
 }
 
+// MARK: 38 Count and Say
+string countAndSay(int n) {
+    if (n == 0) return NULL;
+    if (n == 1) return "1";
+    string s = countAndSay(n-1);
+    int count = 1;
+    string res = "";
+    for(int i = 0; i < s.length(); i++){
+        if(i+1 < s.length() && s[i] == s[i+1]){
+            count++;
+        } else {
+            res += to_string(count)+s[i];
+            count = 1;
+        }
+    }
+    return res;
+}
+
+// MARK: 88 Merge sorted array
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+    int i,j = 0;
+    vector<int> temp;
+    while(i < m && j < n){
+        if (nums1[i] < nums2[j]){
+            temp.push_back(nums1[i]);
+            i++;
+        } else {
+            temp.push_back(nums2[j]);
+            j++;
+        }
+    }
+    if (i == m){
+        for(; j < n; j++){
+            temp.push_back(nums2[j]);
+        }
+    } else {
+        for(; i < m; i++){
+            temp.push_back(nums1[i]);
+        }
+    }
+    nums1 = vector<int>(temp);
+}
+
 
 // MARK: 102 Binary Tree Level Order Traversal
 void levelOrderHelper(TreeNode* root, vector<vector<int>> &list, int level){
@@ -396,12 +439,44 @@ int rob(vector<int>& nums) {
 
 // MARK: 206 reverse linked list
 ListNode* reverseList(ListNode* head) {
-    if (head == NULL) return NULL;
+    if (!head || !head->next) return head;
     ListNode *temp = reverseList(head->next);
     head->next->next = head;
     head->next = NULL;
     return temp;
 }
+
+// MARK: 225 Implement Stack using Queues
+//
+//queue<int> q;
+//// Push element x onto stack.
+//void push(int x) {
+//    queue<int> temp;
+//    while(!q.empty()){
+//        temp.push(q.front());
+//        q.pop();
+//    }
+//    q.push(x);
+//    while(!temp.empty()){
+//        q.push(temp.front());
+//        temp.pop();
+//    }
+//}
+//
+//// Removes the element on top of the stack.
+//void pop() {
+//    q.pop();
+//}
+//
+//// Get the top element.
+//int top() {
+//    return q.front();
+//}
+//
+//// Return whether the stack is empty.
+//bool empty() {
+//    return q.empty();
+//}
 
 // MARK: 232 Implement Queue by Stack
 stack<int> s;
@@ -433,6 +508,38 @@ int peek(void) {
 // Return whether the queue is empty.
 bool empty(void) {
     return s.empty();
+}
+
+
+// MARK: 234. Palindrome Linked List
+bool isPalindrome(ListNode* head) {
+    if(!head || !head->next) return true;
+    ListNode* slow=head;
+    ListNode* fast=head;
+    while(fast->next!=NULL&&fast->next->next!=NULL){
+        slow=slow->next;
+        fast=fast->next->next;
+    }
+    slow->next=reverseList(slow->next);
+    slow=slow->next;
+    while(slow!=NULL){
+        if(head->val!=slow->val)
+            return false;
+        head=head->next;
+        slow=slow->next;
+    }
+    return true;
+}
+ListNode* reverseList(ListNode* head) {
+    ListNode* pre=NULL;
+    ListNode* next=NULL;
+    while(head!=NULL){
+        next=head->next;
+        head->next=pre;
+        pre=head;
+        head=next;
+    }
+    return pre;
 }
 
 // MARK: 257. Binary Tree Paths
@@ -516,10 +623,14 @@ bool canConstruct(string ransomNote, string magazine) {
 
 // test
 int main(int argc, const char * argv[]) {
+    ListNode *head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(1);
+    head->next->next->next = new ListNode(1);
     vector<int> n = {12,9,3,8,5,11};
     vector<int> m = {7,24,3,8,5,11};
     vector<int> A = {1,0,-1,0,2,-2};
     vector<vector <int>> r = fourSum(A,0);
-    cout << maxProfit(n) << endl;
+    cout << isPalindrome(head) << endl;
     return 0;
 }
