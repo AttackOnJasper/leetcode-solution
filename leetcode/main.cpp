@@ -530,17 +530,17 @@ bool isPalindrome(ListNode* head) {
     }
     return true;
 }
-ListNode* reverseList(ListNode* head) {
-    ListNode* pre=NULL;
-    ListNode* next=NULL;
-    while(head!=NULL){
-        next=head->next;
-        head->next=pre;
-        pre=head;
-        head=next;
-    }
-    return pre;
-}
+//ListNode* reverseList(ListNode* head) {
+//    ListNode* pre=NULL;
+//    ListNode* next=NULL;
+//    while(head!=NULL){
+//        next=head->next;
+//        head->next=pre;
+//        pre=head;
+//        head=next;
+//    }
+//    return pre;
+//}
 
 // MARK: 257. Binary Tree Paths
 void binaryTreePathsHelper(TreeNode* root, string curString, vector<string> &v){
@@ -621,6 +621,40 @@ bool canConstruct(string ransomNote, string magazine) {
     return true;
 }
 
+// 396 Rotate function
+int maxRotateFunction(vector<int>& A) {
+    int sumOfNums = 0;
+    int res = 0;
+    int cur = 0;
+    for(int i = 0; i<A.size();i++){
+        res += i * A[i];
+        sumOfNums += A[i];
+    }
+    cur = res;
+    for(int i = A.size()-1; i >= 0; i--){
+        cur += sumOfNums - A[i]*A.size();
+        if (cur > res) res = cur;
+    }
+    return res;
+}
+
+// 397. Integer Replacement
+int integerReplacement(int n) {
+    if (n == INT_MAX) return 32;
+    int res = 0;
+    while(n!=1){
+        if (n%2 == 0) n/=2;
+        else if (n== 3){
+            res += 2;
+            return res;
+        }
+        else if ((n+1)%4 == 0) n += 1;
+        else n -= 1;
+        res++;
+    }
+    return res;
+}
+
 // test
 int main(int argc, const char * argv[]) {
     ListNode *head = new ListNode(1);
@@ -629,8 +663,9 @@ int main(int argc, const char * argv[]) {
     head->next->next->next = new ListNode(1);
     vector<int> n = {12,9,3,8,5,11};
     vector<int> m = {7,24,3,8,5,11};
-    vector<int> A = {1,0,-1,0,2,-2};
+    vector<int> A = {4,3,2,6};
     vector<vector <int>> r = fourSum(A,0);
-    cout << isPalindrome(head) << endl;
+//    cout << integerReplacement(2147483647) << endl;
+    cout << INT_MAX << endl;
     return 0;
 }
