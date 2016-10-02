@@ -555,6 +555,40 @@ vector<string> binaryTreePaths(TreeNode* root) {
     return res;
 }
 
+
+// MARK: 339 Nested List Weight Sum
+ class NestedInteger {
+       public:
+         // Return true if this NestedInteger holds a single integer, rather than a nested list.
+         bool isInteger() const;
+    
+         // Return the single integer that this NestedInteger holds, if it holds a single integer
+        // The result is undefined if this NestedInteger holds a nested list
+         int getInteger() const;
+    
+         // Return the nested list that this NestedInteger holds, if it holds a nested list
+         // The result is undefined if this NestedInteger holds a single integer
+         const vector<NestedInteger> &getList() const;
+};
+
+//int depthSumHelper(vector<NestedInteger>& nestedList, int level){
+//    int sum = 0;
+//    for(int i = 0; i < nestedList.size(); i++){
+//        if (nestedList[i].isInteger()){
+//            sum += nestedList[i].getInteger()*level;
+//        } else {
+//            sum += depthSumHelper(nestedList[i].getList(), level+1);
+//        }
+//    }
+//    return sum;
+//}
+//
+//int depthSum(vector<NestedInteger>& nestedList) {
+//    return depthSumHelper(nestedList, 1);
+//}
+
+
+
 // MARK: 342 is power of 4
 bool isPowerOfFour(int num) {
     return num > 0 && (num & (num - 1)) == 0 && (num - 1) % 3 == 0;

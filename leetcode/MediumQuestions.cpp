@@ -10,6 +10,15 @@
 
 using namespace std;
 
+// MARK: 12. Int to Roman
+string intToRoman(int num) {
+    string M[] = {"", "M", "MM", "MMM"};
+    string C[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+    string X[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+    string I[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+    return M[num/1000] + C[(num%1000)/100] + X[(num%100)/10] + I[num%10];
+}
+
 // MARK: 122. Best Time to Buy and Sell Stock II
 
 int maxProfit2(vector<int>& prices) {
@@ -22,6 +31,23 @@ int maxProfit2(vector<int>& prices) {
     }
     return res;
 }
+
+// MARK: 144. Binary Tree Preorder Traversal
+vector<int> preorderTraversal(TreeNode* root) {
+    if (!root) return vector<int>();
+    stack<TreeNode*> s;
+    s.push(root);
+    vector<int> res;
+    while(!s.empty()){
+        TreeNode* temp = s.top();
+        res.push_back(temp->val);
+        s.pop();
+        if(temp->right) s.push(temp->right);
+        if(temp->left) s.push(temp->left);
+    }
+    return res;
+}
+
 
 // MARK: 167. Two Sum II - Input array is sorted
 
@@ -64,6 +90,25 @@ int missingNumber(vector<int>& nums) {
     return 0;
 }
 
+// MARK: 319. Bulb Switcher
+int bulbSwitch(int n) {
+    return sqrt(n);
+}
+
+// MARK: 337. House Robber III
+int tryRob(TreeNode* root, int& l, int& r){
+    if(!root) return 0;
+    int ll = 0, lr = 0, rl = 0, rr = 0;
+    l = tryRob(root->left, ll, lr);
+    r = tryRob(root->right, ll, lr);
+    
+    return max(root->val + ll + lr + rl + rr, l + r); // dynamic programming
+}
+
+int rob(TreeNode* root){
+    int l,r;
+    return tryRob(root, l, r);
+}
 
 // MARK: 343. Integer Break
 int integerBreak(int n) {
@@ -86,6 +131,20 @@ int countNumbersWithUniqueDigits(int n) {
         availableNumber--;
     }
     return res;
+}
+
+// MARK: 377. Combination Sum IV
+int combinationSum4(vector<int>& nums, int target) {
+    vector<int> dp(target+1,0);
+    dp[0]=1;
+    for(int i=1;i<=target;i++){
+        for(int j=0;j<nums.size();j++){
+            if(i>=nums[j]){
+                dp[i]+=dp[i-nums[j]];
+            }
+        }
+    }
+    return dp[target];
 }
 
 // MARK: 384. Shuffle an Array
