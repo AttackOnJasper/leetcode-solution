@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <stack>
 #include <queue>
+#include <map>
 
 struct ListNode {
     int val;
@@ -32,5 +33,11 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
+struct Interval {
+         int start;
+         int end;
+         Interval() : start(0), end(0) {}
+         Interval(int s, int e) : start(s), end(e) {}
+};
 
 #endif /* MediumQuestions_hpp */

@@ -542,6 +542,30 @@ bool isPalindrome(ListNode* head) {
 //    return pre;
 //}
 
+
+// MARK: 243. Shortest Word Distance
+int shortestDistance(vector<string>& words, string word1, string word2) {
+    int n = words.size(), idx1 = -1, idx2 = -1, dist = INT_MAX;
+    for (int i = 0; i < n; i++) {
+        if (words[i] == word1) idx1 = i;
+        else if (words[i] == word2) idx2 = i;
+        if (idx1 != -1 && idx2 != -1)
+            dist = min(dist, abs(idx1 - idx2));
+    }
+    return dist;
+}
+
+// MARK: 252 Meeting Rooms
+bool canAttendMeetings(vector<Interval>& intervals) {
+    sort(intervals.begin(), intervals.end(), [](const Interval& a, const Interval& b){ return a.start < b.start; });
+    int currend=INT_MIN;
+    for(int i = 0; i < intervals.size(); ++i) {
+        if(intervals[i].start < currend)  return false;
+        currend = intervals[i].end;
+    }
+    return true;
+}
+
 // MARK: 257. Binary Tree Paths
 void binaryTreePathsHelper(TreeNode* root, string curString, vector<string> &v){
     if (!root) return;
@@ -555,6 +579,27 @@ vector<string> binaryTreePaths(TreeNode* root) {
     return res;
 }
 
+// MARK: 266 Palindrome Permutation
+bool canPermutePalindrome(string s) {
+    bitset<26> bs;
+    for (auto ch : s)
+        bs[ch - 'a'].flip();
+    return (bs.count() <= 1);
+}
+
+// MARK: 293 Flip Game
+vector<string> generatePossibleNextMoves(string s) {
+    vector<string> res;
+    for(int i = 1; i < s.length(); i++){
+        if(s[i] == s[i-1] && s[i] == '+'){
+            string temp = s;
+            temp[i] = '-';
+            temp[i-1] = '-';
+            res.push_back(temp);
+        }
+    }
+    return res;
+}
 
 // MARK: 339 Nested List Weight Sum
  class NestedInteger {
@@ -625,6 +670,39 @@ string reverseVowels(string s) {
     }
     
     return s;
+}
+
+// MARK: 346. Moving Average from Data Stream
+class MovingAverage {
+    queue<int> Q;
+    int subSum = 0;
+    int size;
+public:
+    /** Initialize your data structure here. */
+    MovingAverage(int size) {
+        this->size = size;
+    }
+    
+    double next(int val) {
+        if (Q.size() == size) {
+            subSum -= Q.front();
+            Q.pop();
+        }
+        Q.push(val);
+        subSum += val;
+        return (double)subSum / Q.size();
+    }
+    
+};
+
+// MARK: 359. Logger Rate Limiter
+map<string, int> ok;
+
+bool shouldPrintMessage(int timestamp, string message) {
+    if (timestamp < ok[message])
+        return false;
+    ok[message] = timestamp + 10;
+    return true;
 }
 
 
