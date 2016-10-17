@@ -11,7 +11,7 @@
 using namespace::std;
 
 
-
+// MARK: 344 Reverse string
 string reverseString(string s){
     string temp;
     for (int i = 0; i < s.length(); i++){
@@ -73,7 +73,7 @@ int myAtoi(string str) {
 // MARK: 11. Contains most water
 int maxArea(vector<int>& height) {
     int curMax = 0;
-    int length = height.size() - 1;
+    int length = (int)height.size() - 1;
     int i = 0;
     int j = length;
     while (j > i) {
@@ -100,7 +100,7 @@ vector<vector<int> > threeSum(vector<int> &num) {
         
         int target = -num[i];
         int front = i + 1;
-        int back = num.size() - 1;
+        int back = (int)num.size() - 1;
         
         while (front < back) {
             
@@ -145,7 +145,7 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
     for (int i = 0; i < nums.size(); i++){
         for (int j = i + 1; j < nums.size(); j++) {
             int start = j+1;
-            int end = nums.size() - 1;
+            int end = (int)nums.size() - 1;
             int curTarget = target - nums[i] - nums[j];
             while (end > start) {
                 if (nums[end] + nums[start] > curTarget) end--;
@@ -377,6 +377,24 @@ bool hasCycle(ListNode *head) {
     return false;
 }
 
+// MARK: 157. Read N Characters Given Read4
+int read4(char *buf);
+/**
+ * @param buf Destination buffer
+ * @param n   Maximum number of characters to read
+ * @return    The number of characters read
+ */
+int read(char *buf, int n) {
+    int res = 0;
+    for(int i = 0; i < n/4; ++i){
+        int temp = read4(buf);
+        res += temp;
+        buf += temp;
+    }
+    res+= min(read4(buf),n%4);
+    return res;
+}
+
 // MARK: 165. Compare Version Numbers
 int compareVersion(string version1, string version2) {
     char dot;
@@ -404,6 +422,26 @@ string convertToTitle(int n) {
     reverse(result.begin(), result.end());
     return result;
 }
+
+// MARK: 170 Two Sum Data Structure
+class TwoSum {
+    unordered_map<int,int> map;
+public:
+    void add(int number) {
+        map[number]++;
+    }
+    
+    bool find(int value) {
+        for (unordered_map<int,int>::iterator it = map.begin(); it != map.end(); it++) {
+            int i = it->first;
+            int j = value - i;
+            if ((i == j && it->second > 1) || (i != j && map.find(j) != map.end())) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
 
 // MARK: 171 Excel column to number
 int titleToNumber(string s) {
@@ -544,8 +582,9 @@ bool isPalindrome(ListNode* head) {
 
 
 // MARK: 243. Shortest Word Distance
+// Given a list of words and two words word1 and word2, return the shortest distance between these two words in the list
 int shortestDistance(vector<string>& words, string word1, string word2) {
-    int n = words.size(), idx1 = -1, idx2 = -1, dist = INT_MAX;
+    int n = (int)words.size(), idx1 = -1, idx2 = -1, dist = INT_MAX;
     for (int i = 0; i < n; i++) {
         if (words[i] == word1) idx1 = i;
         else if (words[i] == word2) idx2 = i;
@@ -555,7 +594,19 @@ int shortestDistance(vector<string>& words, string word1, string word2) {
     return dist;
 }
 
+// MARK: 246. Strobogrammatic Number (looks the same when rotated 180 degrees)
+bool isStrobogrammatic(string num) {
+    for(int i = 0, j = (int)num.length()-1; i < num.length(); i++, j--){
+        if((num[i] == '0' || num[i] == '8' || num[i] == '1') && num[i] == num[j]) continue;
+        if(num[i] == '6' && num[j] == '9') continue;
+        if (num[i] == '9' && num[j] == '6') continue;
+        return false;
+    }
+    return true;
+}
+
 // MARK: 252 Meeting Rooms
+// Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), determine if a person could attend all meetings.
 bool canAttendMeetings(vector<Interval>& intervals) {
     sort(intervals.begin(), intervals.end(), [](const Interval& a, const Interval& b){ return a.start < b.start; });
     int currend=INT_MIN;
@@ -580,11 +631,41 @@ vector<string> binaryTreePaths(TreeNode* root) {
 }
 
 // MARK: 266 Palindrome Permutation
+// Given a string, determine if a permutation of the string could form a palindrome
 bool canPermutePalindrome(string s) {
     bitset<26> bs;
     for (auto ch : s)
         bs[ch - 'a'].flip();
     return (bs.count() <= 1);
+}
+
+
+// MARK: 270. Closest Binary Search Tree Value
+// Given a non-empty binary search tree and a target value, find the value in the BST that is closest to the target.
+int closestValue(TreeNode* root, double target) {
+    int closest = root->val;
+    while (root) {
+        if (abs(closest - target) >= abs(root->val - target))
+            closest = root->val;
+        root = target < root->val ? root->left : root->right;
+    }
+    return closest;
+}
+
+// MARK: 276. Paint Fence
+int numWays(int n, int k) {
+    if(n == 0) return 0;
+    if(n == 1) return k;
+    // choose one color to paint the first and choose the other to paint the second
+    int diffColorCounts = k*(k-1);
+    // use the same color as the second previous one
+    int sameColorCounts = k;
+    for(int i=2; i<n; i++) {
+        int temp = diffColorCounts;
+        diffColorCounts = (diffColorCounts + sameColorCounts) * (k-1);
+        sameColorCounts = temp;
+    }
+    return diffColorCounts + sameColorCounts;
 }
 
 // MARK: 293 Flip Game
@@ -648,7 +729,7 @@ bool isVowel(char c){
            c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U');
 }
 string reverseVowels(string s) {
-    int front = 0, behind = s.length() - 1;
+    int front = 0, behind = (int)s.length() - 1;
     while (front < behind)
     {
         if (!isVowel(s[front]))
@@ -743,14 +824,14 @@ int maxRotateFunction(vector<int>& A) {
         sumOfNums += A[i];
     }
     cur = res;
-    for(int i = A.size()-1; i >= 0; i--){
+    for(int i = (int)A.size()-1; i >= 0; i--){
         cur += sumOfNums - A[i]*A.size();
         if (cur > res) res = cur;
     }
     return res;
 }
 
-// 397. Integer Replacement
+// MARK: 397. Integer Replacement
 int integerReplacement(int n) {
     if (n == INT_MAX) return 32;
     int res = 0;
@@ -767,6 +848,23 @@ int integerReplacement(int n) {
     return res;
 }
 
+// MARK: 422. Valid Word Square
+/*
+ Given a sequence of words, check whether it forms a valid word square.
+ 
+ A sequence of words forms a valid word square if the kth row and column read the exact same string, where 0 ≤ k < max(numRows, numColumns).
+ 
+ */
+bool validWordSquare(vector<string>& words) {
+    for(int i = 0; i < words.size(); ++i) {
+        for(int j = 0; j < words[i].length(); ++j){
+            if(j >= words.size() || words[j].length() <= i || words[j][i] != words[i][j])
+                return false;
+        }
+    }
+    return true;
+}
+
 // test
 int main(int argc, const char * argv[]) {
     ListNode *head = new ListNode(1);
@@ -778,6 +876,6 @@ int main(int argc, const char * argv[]) {
     vector<int> A = {4,3,2,6};
     vector<vector <int>> r = fourSum(A,0);
 //    cout << integerReplacement(2147483647) << endl;
-    cout << INT_MAX << endl;
+    cout << isStrobogrammatic("10") << endl;
     return 0;
 }
