@@ -605,6 +605,34 @@ bool isStrobogrammatic(string num) {
     return true;
 }
 
+// MARK: 249. Group Shifted Strings
+class Solution {
+public:
+    vector<vector<string>> groupStrings(vector<string>& strings) {
+        unordered_map<string, vector<string> > mp;
+        for (string  s : strings)
+            mp[shift(s)].push_back(s);
+        vector<vector<string> > groups;
+        for (auto m : mp) {
+            vector<string> group = m.second;
+            sort(group.begin(), group.end());
+            groups.push_back(group);
+        }
+        return groups;
+    }
+private:
+    string shift(string& s) {
+        string t;
+        int n = s.length();
+        for (int i = 1; i < n; i++) {
+            int diff = s[i] - s[i - 1];
+            if (diff < 0) diff += 26;
+            t += diff + ',';
+        }
+        return t;
+    }
+};
+
 // MARK: 252 Meeting Rooms
 // Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei), determine if a person could attend all meetings.
 bool canAttendMeetings(vector<Interval>& intervals) {
@@ -667,6 +695,27 @@ int numWays(int n, int k) {
     }
     return diffColorCounts + sameColorCounts;
 }
+
+
+// MARK: 288. Unique Word Abbreviation
+class ValidWordAbbr {
+public:
+    ValidWordAbbr(vector<string> &dictionary) {
+        for (string& d : dictionary) {
+            int n = d.length();
+            string abbr = d[0] + to_string(n) + d[n - 1];
+            mp[abbr].insert(d);
+        }
+    }
+    
+    bool isUnique(string word) {
+        int n = word.length();
+        string abbr = word[0] + to_string(n) + word[n - 1];
+        return mp[abbr].count(word) == mp[abbr].size();
+    }
+private:
+    unordered_map<string, unordered_set<string>> mp;
+};
 
 // MARK: 293 Flip Game
 vector<string> generatePossibleNextMoves(string s) {
@@ -846,6 +895,22 @@ int integerReplacement(int n) {
         res++;
     }
     return res;
+}
+
+// MARK: 408. Valid Word Abbreviation
+bool validWordAbbreviation(string word, string abbr) {
+    int i = 0, j = 0;
+    while (i < word.size() && j < abbr.size()) {
+        if (isdigit(abbr[j])) {
+            if (abbr[j] == '0') return false;
+            int val = 0;
+            while (j < abbr.size() && isdigit(abbr[j]))
+                val = val * 10 + abbr[j++] - '0';
+            i += val;
+        }
+        else if (word[i++] != abbr[j++]) return false;
+    }
+    return i == word.size() && j == abbr.size();
 }
 
 // MARK: 422. Valid Word Square
