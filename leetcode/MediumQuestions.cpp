@@ -48,11 +48,44 @@ vector<int> preorderTraversal(TreeNode* root) {
     return res;
 }
 
+// MARK: 163. Missing Ranges
+string missingRangeHelper(int l, int u){
+    if (l == u){
+        return to_string(l);
+    }
+    return (to_string(l) + "->" + to_string(u));
+}
+
+vector<string> findMissingRanges(vector<int>& nums, int lower, int upper) {
+    int n = (int)nums.size();
+    vector<string> res;
+    if (n < 1) {
+        res.push_back(missingRangeHelper(lower, upper));
+        return res;
+    }
+    
+    if (nums[0] > lower){
+        res.push_back(missingRangeHelper(lower, nums[0] - 1));
+    }
+    for (int i = 1; i < n; ++i){
+        if (nums[i] > nums[i - 1] + 1){
+            res.push_back(missingRangeHelper(nums[i-1] + 1, nums[i] - 1));
+        }
+    }
+    if (nums[n-1] < upper){
+        res.push_back(missingRangeHelper(nums[n-1] + 1, upper));
+    }
+    
+    return res;
+}
+
+
+
 
 // MARK: 167. Two Sum II - Input array is sorted
 
 vector<int> twoSum(vector<int>& numbers, int target) {
-    int i = 0, j = numbers.size()-1;
+    int i = 0, j = (int)numbers.size()-1;
     while(j > i){
         int temp = numbers[j]+numbers[i];
         if (temp == target) break;
@@ -62,6 +95,57 @@ vector<int> twoSum(vector<int>& numbers, int target) {
     return {i+1,j+1};
 }
 
+// MARK: 200 Number of Islands
+void DFS(vector<vector<char>> &grid, int x, int y)
+{
+    grid[x][y] = '0';
+    if(x > 0 && grid[x - 1][y] == '1')
+        DFS(grid, x - 1, y);
+    if(x < grid.size() - 1 && grid[x + 1][y] == '1')
+        DFS(grid, x + 1, y);
+    if(y > 0 && grid[x][y - 1] == '1')
+        DFS(grid, x, y - 1);
+    if(y < grid[0].size() - 1 && grid[x][y + 1] == '1')
+        DFS(grid, x, y + 1);
+}
+
+int numIslands(vector<vector<char>> &grid)
+{
+    if(grid.size() == 0 || grid[0].size() == 0) return 0;
+    
+    int res = 0;
+    for(int i = 0; i < grid.size(); ++ i)
+        for(int j = 0; j < grid[0].size(); ++ j)
+            if(grid[i][j] == '1')
+            {
+                ++ res;
+                DFS(grid, i, j);
+            }
+    return res;
+}
+
+// MARK: 228. Summary Ranges
+// For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
+vector<string> summaryRanges(vector<int>& nums) {
+    vector<string> res;
+    int i = 0;
+    while(i < nums.size()){
+        int level = i+1;
+        int curr = nums[i];
+        while(level < nums.size() && (nums[level] - curr) == 1){
+            curr = nums[level];
+            level++;
+        }
+        if (level == i+1) {
+            res.push_back(to_string(curr));
+        }
+        else {
+            res.push_back(to_string(nums[i])+"->"+to_string(curr));
+        }
+        i = level;
+    }
+    return res;
+}
 
 // MARK: 238. Product Of Array Except Self
 vector<int> productExceptSelf(vector<int>& nums) {
@@ -71,7 +155,7 @@ vector<int> productExceptSelf(vector<int>& nums) {
         res[i] = res[i-1] * nums[i-1];
     }
     int right = 1;
-    for(int i = nums.size()-1; i >= 0; i--){
+    for(int i = (int)nums.size()-1; i >= 0; i--){
         res[i] *= right;
         right *= nums[i];
     }
@@ -88,6 +172,26 @@ int missingNumber(vector<int>& nums) {
         if (temp[i]) return i;
     }
     return 0;
+}
+
+// MARK: 279. Perfect Squares
+int numSquares(int n) {
+    vector<int> dp {0};
+    while(dp.size() <= n){
+        int m = (int)dp.size(), temp = INT_MAX;
+        for(int i = 1; i*i <= m; i++){
+            temp = min(temp, dp[m-i*i]+1);
+        }
+        dp.push_back(temp);
+    }
+    return dp[n];
+}
+
+// MARK: 280 Wiggle Sort
+void wiggleSort(vector<int>& nums) {
+    for (int i = 1; i < nums.size(); i++)
+        if (((i & 1) && nums[i] < nums[i - 1]) || (!(i & 1) && nums[i] > nums[i - 1]))
+            swap(nums[i], nums[i - 1]);
 }
 
 // MARK: 319. Bulb Switcher
@@ -133,6 +237,25 @@ int countNumbersWithUniqueDigits(int n) {
     return res;
 }
 
+// MARK: 366 Find leaves of binary tree
+// Given a binary tree, collect a tree's nodes as if you were doing this: Collect and remove all leaves, repeat until the tree is empty.
+int findLeavesHelper(TreeNode* root, vector<vector<int>>& vec){
+    if(!root) return 0;
+    int level = max(findLeavesHelper(root->left, vec), findLeavesHelper(root->right, vec))+1;
+    if(level > (int)vec.size()) vec.push_back(vector<int>());
+    vec[level-1].push_back(root->val);
+    return level;
+}
+
+vector<vector<int>> findLeaves(TreeNode* root) {
+    vector<vector<int>> res;
+    findLeavesHelper(root, res);
+    return res;
+}
+
+// MARK: 370. Range Addition
+
+
 // MARK: 377. Combination Sum IV
 int combinationSum4(vector<int>& nums, int target) {
     vector<int> dp(target+1,0);
@@ -173,4 +296,5 @@ bool isSubsequence(string s, string t) {
         }
     }
     return false;
+    
 }

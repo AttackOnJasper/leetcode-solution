@@ -250,6 +250,31 @@ string countAndSay(int n) {
     return res;
 }
 
+// MARK: 66 Plus one
+vector<int> plusOne(vector<int>& digits) {
+    if (!digits.size()) return digits;
+    if (digits.back() != 9){
+        digits.back()++;
+        return digits;
+    }
+    int index = digits.size()-1;
+    while (digits[index] == 9 && index != 0) {
+        digits[index] = 0;
+        index--;
+    }
+    if (index){
+        digits[index]++;
+    } else {
+        if (digits.front() == 9){
+            digits.front() = 1;
+            digits.push_back(0);
+        } else {
+            digits.front()++;
+        }
+    }
+    return digits;
+}
+
 // MARK: 88 Merge sorted array
 void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
     int i,j = 0;
@@ -378,22 +403,22 @@ bool hasCycle(ListNode *head) {
 }
 
 // MARK: 157. Read N Characters Given Read4
-int read4(char *buf);
-/**
- * @param buf Destination buffer
- * @param n   Maximum number of characters to read
- * @return    The number of characters read
- */
-int read(char *buf, int n) {
-    int res = 0;
-    for(int i = 0; i < n/4; ++i){
-        int temp = read4(buf);
-        res += temp;
-        buf += temp;
-    }
-    res+= min(read4(buf),n%4);
-    return res;
-}
+//int read4(char *buf);
+///**
+// * @param buf Destination buffer
+// * @param n   Maximum number of characters to read
+// * @return    The number of characters read
+// */
+//int read(char *buf, int n) {
+//    int res = 0;
+//    for(int i = 0; i < n/4; ++i){
+//        int temp = read4(buf);
+//        res += temp;
+//        buf += temp;
+//    }
+//    res+= min(read4(buf),n%4);
+//    return res;
+//}
 
 // MARK: 165. Compare Version Numbers
 int compareVersion(string version1, string version2) {
@@ -623,7 +648,7 @@ public:
 private:
     string shift(string& s) {
         string t;
-        int n = s.length();
+        int n = (int)s.length();
         for (int i = 1; i < n; i++) {
             int diff = s[i] - s[i - 1];
             if (diff < 0) diff += 26;
@@ -702,14 +727,14 @@ class ValidWordAbbr {
 public:
     ValidWordAbbr(vector<string> &dictionary) {
         for (string& d : dictionary) {
-            int n = d.length();
+            int n = (int)d.length();
             string abbr = d[0] + to_string(n) + d[n - 1];
             mp[abbr].insert(d);
         }
     }
     
     bool isUnique(string word) {
-        int n = word.length();
+        int n = (int)word.length();
         string abbr = word[0] + to_string(n) + word[n - 1];
         return mp[abbr].count(word) == mp[abbr].size();
     }
@@ -897,6 +922,16 @@ int integerReplacement(int n) {
     return res;
 }
 
+
+// MARK: 404. Sum of Left Leaves
+int sumOfLeftLeaves(TreeNode* root) {
+    if (!root) return 0;
+    if (root->left && !root->left->left && !root->left->right) return root->left->val + sumOfLeftLeaves(root->right);
+    return sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right);
+}
+
+
+
 // MARK: 408. Valid Word Abbreviation
 bool validWordAbbreviation(string word, string abbr) {
     int i = 0, j = 0;
@@ -911,6 +946,25 @@ bool validWordAbbreviation(string word, string abbr) {
         else if (word[i++] != abbr[j++]) return false;
     }
     return i == word.size() && j == abbr.size();
+}
+
+// MARK: 412. Fizz Buzz
+vector<string> fizzBuzz(int n) {
+    vector<string> res;
+    for(int i = 1; i <= n; i++){
+        if (i%3 == 0){
+            if (i%5 == 0){
+                res.push_back("FizzBuzz");
+            } else {
+                res.push_back("Fizz");
+            }
+        } else if (i%5 == 0){
+            res.push_back("Buzz");
+        } else {
+            res.push_back(to_string(i));
+        }
+    }
+    return res;
 }
 
 // MARK: 422. Valid Word Square
@@ -940,7 +994,5 @@ int main(int argc, const char * argv[]) {
     vector<int> m = {7,24,3,8,5,11};
     vector<int> A = {4,3,2,6};
     vector<vector <int>> r = fourSum(A,0);
-//    cout << integerReplacement(2147483647) << endl;
-    cout << isStrobogrammatic("10") << endl;
     return 0;
 }
