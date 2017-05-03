@@ -10,15 +10,12 @@
 
 using namespace::std;
 
+/*
+ Bit manipulation:
+ ^ == XOR: a^b == 0 if a == b  e.g. a = 1001, b = 1010, a^b = 0011
+ 
+ */
 
-// MARK: 344 Reverse string
-string reverseString(string s){
-    string temp;
-    for (int i = 0; i < s.length(); i++){
-        temp = s[i] + temp;
-    }
-    return temp;
-}
 
 // move zeros to the end of the list
 void movingZeros(vector<int>& arr){
@@ -756,6 +753,8 @@ vector<string> generatePossibleNextMoves(string s) {
     return res;
 }
 
+
+
 // MARK: 339 Nested List Weight Sum
  class NestedInteger {
        public:
@@ -796,6 +795,15 @@ bool isPowerOfFour(int num) {
     // (num - 1) % 3 prove by induction
 }
 
+// MARK: 344 Reverse string
+string reverseString(string s){
+    string temp;
+    for (int i = 0; i < s.length(); i++){
+        temp = s[i] + temp;
+    }
+    return temp;
+}
+
 // MARK: 345
 
 bool isVowel(char c){
@@ -828,27 +836,27 @@ string reverseVowels(string s) {
 }
 
 // MARK: 346. Moving Average from Data Stream
-class MovingAverage {
-    queue<int> Q;
-    int subSum = 0;
+class MovingAverage{
+    int sum;
+    queue<int> q;
     int size;
 public:
-    /** Initialize your data structure here. */
-    MovingAverage(int size) {
-        this->size = size;
-    }
+    static int test;
+    MovingAverage(int size):size(size),sum(0){}
     
-    double next(int val) {
-        if (Q.size() == size) {
-            subSum -= Q.front();
-            Q.pop();
+    double next(int val){
+        if (q.size() == size){
+            sum -=q.front();
+            q.pop();
         }
-        Q.push(val);
-        subSum += val;
-        return (double)subSum / Q.size();
+        sum += val;
+        q.push(val);
+        return (double)sum/q.size();
     }
     
 };
+
+int MovingAverage::test = 0;
 
 // MARK: 359. Logger Rate Limiter
 map<string, int> ok;
@@ -865,8 +873,8 @@ bool shouldPrintMessage(int timestamp, string message) {
 int getSum(int a, int b) {
     int sum = 0;
     while (b != 0) {
-        sum = a ^ b;
-        b = (a & b) << 1;
+        sum = a ^ b;    // calculate 0 + 1
+        b = (a & b) << 1;   // calculate 1 + 1
         a = sum;
     }
     return a;
@@ -984,15 +992,85 @@ bool validWordSquare(vector<string>& words) {
     return true;
 }
 
+// MARK: 463. Island Perimeter
+/*
+ [[0,1,0,0],
+ [1,1,1,0],
+ [0,1,0,0],
+ [1,1,0,0]]
+ 
+ Answer: 16
+ */
+int islandPerimeter(vector<vector<int>>& grid) {
+    int totalSize = 0, intersection = 0;
+    for(int i = 0; i < (int)grid.size(); i++){
+        for(int j = 0; j < (int)grid[i].size();j++){
+            int temp = grid[i][j];
+            if (temp == 1){
+                totalSize++;
+                if (i && temp == grid[i-1][j]) intersection++;
+                if (j && temp == grid[i][j-1]) intersection++;
+            }
+        }
+    }
+    return totalSize*4-intersection*2;
+}
+
+// MARK: 496
+vector<int> nextGreaterElement(vector<int>& findNums, vector<int>& nums) {
+    vector<int> res;
+    for (int i = 0; i < findNums.size(); i++) {
+        int element = findNums[i];
+        int prev = (int)res.size();
+        bool found = false;
+        for (int j = 0; j < nums.size(); j++) {
+            if (nums[j] == element) {
+                found = true;
+            } else if (found && nums[j] > element) {
+                res.push_back(nums[j]);
+                break;
+            }
+        }
+        if (res.size() == prev) {
+            res.push_back(-1);
+        }
+    }
+    return res;
+}
+
+// MARK: 557 Reverse Words in a string
+string reverseWords(string s) {
+    istringstream is(s);
+    string res = "";
+    string temp = "";
+    while (is >> temp) {
+        reverse(temp.begin(), temp.end());
+        res += temp + " ";
+    }
+    return res.substr(0, res.length() - 1);
+}
+
+
+
 // test
 int main(int argc, const char * argv[]) {
-    ListNode *head = new ListNode(1);
-    head->next = new ListNode(2);
-    head->next->next = new ListNode(1);
-    head->next->next->next = new ListNode(1);
-    vector<int> n = {12,9,3,8,5,11};
-    vector<int> m = {7,24,3,8,5,11};
-    vector<int> A = {4,3,2,6};
-    vector<vector <int>> r = fourSum(A,0);
-    return 0;
+//    ListNode *head = new ListNode(1);
+//    head->next = new ListNode(2);
+//    head->next->next = new ListNode(1);
+//    head->next->next->next = new ListNode(1);
+//    vector<int> n = {12,9,3,8,5,11};
+//    vector<int> m = {7,24,3,8,5,11};
+//    vector<int> A = {4,3,2,6};
+//    vector<vector <int>> r = fourSum(A,0);
+//    return 0;
+//    MovingAverage ma(0);
+//    cout << ma.test << endl;
+//    cout << MovingAverage::test << endl;
+    int a = 2.5*5 && 5 || 2/-2;
+    cout << a << endl;
+    {
+        static int b;
+    }
+//    cout << b << endl;
+
 }

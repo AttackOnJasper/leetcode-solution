@@ -10,6 +10,23 @@
 
 using namespace std;
 
+
+// Pre-order, in-order, post-order traversal using loop
+void traversal(TreeNode* root){
+    stack<TreeNode *> temp;
+    while (root || !temp.empty()){
+        while (root){
+            // pre order: cout << root << endl;
+            temp.push(root);
+            root = root->left;	// post order: root = root->right;
+        }
+        root = temp.top();
+        temp.pop();
+        // in-order & post-order: out << root << endl;
+        root = root->right;		// post order: root = root->left;
+    }
+}
+
 // MARK: 12. Int to Roman
 string intToRoman(int num) {
     string M[] = {"", "M", "MM", "MMM"};
@@ -214,6 +231,19 @@ int rob(TreeNode* root){
     return tryRob(root, l, r);
 }
 
+// MARK: 338. Counting Bits
+vector<int> countBits(int num) {
+    // Count of 1's in i:
+    // Odd:  i = (i-1) | 1, previous count + 1
+    // Even: i = i/2 << 1, same count as i/2
+    vector<int> v(num+1);
+    for (uint i = 0; i <= num; i++) {
+        if (i & 1) v[i] = v[i-1] + 1;
+        else v[i] = v [i / 2];
+    }
+    return v;
+}
+
 // MARK: 343. Integer Break
 int integerBreak(int n) {
     if (n == 2) return 1;
@@ -297,4 +327,20 @@ bool isSubsequence(string s, string t) {
     }
     return false;
     
+}
+
+
+// MARK: 419. Battleships in a Board
+int countBattleships(vector<vector<char>>& board) {
+    int res = 0;
+    for(int i = 0; i < (int)board.size(); i++){
+        for(int j = 0; j < (int)board[i].size();j++){
+            char temp = board[i][j];
+            if (temp == 'X'){
+                if ((i && board[i-1][j] == temp)||(j && board[i][j-1] == temp)){}
+                else res++;
+            }
+        }
+    }
+    return res;
 }
